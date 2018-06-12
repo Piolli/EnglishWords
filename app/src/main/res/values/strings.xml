@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">EnglishWords</string>
+    <string name="EXTRA_GROUP_ID">group_id</string>
 </resources>

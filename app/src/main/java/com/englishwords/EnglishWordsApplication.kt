@@ -3,6 +3,7 @@ package com.englishwords
 import android.app.Application
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import io.realm.RealmList
 import java.util.*
 
 class EnglishWordsApplication : Application() {
@@ -16,16 +17,37 @@ class EnglishWordsApplication : Application() {
                 .build()
         Realm.setDefaultConfiguration(realmConf)
 
+        exampleData()
+    }
+
+    private fun exampleData() {
         Realm.getDefaultInstance().use {
             it.executeTransaction {
-                it.delete(TranslatedWord::class.java)
+                it.delete(WordGroup::class.java)
                 val wordList = WordParseUtils.parseFromString(words)
-                for(word in wordList)
-                    it.insertOrUpdate(word)
-//                it.insertOrUpdate(TranslatedWord("Book", "Kniga", id=Random().nextLong()))
-//                it.insertOrUpdate(TranslatedWord("Book1", "Kniga1", id=Random().nextLong()))
-//                it.insertOrUpdate(TranslatedWord("Book2", "Kniga2", id=Random().nextLong()))
-//                it.insertOrUpdate(TranslatedWord("Book3", "Kniga3", id=Random().nextLong()))
+                val realmListWords = RealmList<TranslatedWord>()
+                wordList.forEach { realmListWords.add(it) }
+                val group = WordGroup()
+                val group1 = WordGroup()
+                val group2 = WordGroup()
+                val group3 = WordGroup()
+
+                group.groupName = "WordGroup1"
+                group.words = realmListWords
+
+                group1.groupName = "English popular words"
+                group1.words = realmListWords
+
+                group2.groupName = "Best words for beginner in english language"
+                group2.words = realmListWords
+
+                group3.groupName = "Not bad"
+                group3.words = realmListWords
+
+                it.insertOrUpdate(group)
+                it.insertOrUpdate(group1)
+                it.insertOrUpdate(group2)
+                it.insertOrUpdate(group3)
             }
         }
     }

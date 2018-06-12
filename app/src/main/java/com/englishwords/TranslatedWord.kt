@@ -1,5 +1,6 @@
 package com.englishwords
 
+import io.realm.RealmModel
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import java.util.*
@@ -12,7 +13,7 @@ open class TranslatedWord(override var word: String = "",
                      override var translate: String = "",
                      override var wordLanguage: String = "English",
                      override var priority: Int = 5,
-                     @PrimaryKey override var id: String = UUID.randomUUID().toString())
+                     override var id: String = UUID.randomUUID().toString())
     : RealmObject(), Word  {
 
     override fun toString(): String {

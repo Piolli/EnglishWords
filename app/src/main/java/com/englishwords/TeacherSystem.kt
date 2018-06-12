@@ -1,31 +1,41 @@
 package com.englishwords
 
 import android.content.Context
+import android.util.Log
 
 
 /**
- * Respond for save right and
- * wrong translate answers
+ * Respond for save right and wrong translate answers
  * 06.06.2018
  * version 1.0
  */
-class TeacherSystem(private val repository: WordRepository) {
+class TeacherSystem(private val repository: WordRepository, val groupId: String) {
+    val LOG = TeacherSystem::class.java.simpleName
+
     /**
      * Get sorted word by descending
      */
-    fun getSortedWords(): Array<Word> {
-        val words = repository.getWords()
+    fun getSortedWords(): ArrayList<TranslatedWord> {
+        val groups = repository.getWordGroups()
+        val realmWords = groups.find { it.id == groupId }?.words
+
+        if(realmWords == null) {
+            Log.d(LOG, "get words from db is null")
+            throw Exception("DB Words is null")
+        }
+
+        val words = ArrayList(realmWords)
         words.sortWith(Comparator { o1, o2 ->
             o2.priority.compareTo(o1.priority)
         })
-        return words
+        return ArrayList(words)
     }
 
     fun onRightAnswer(wordId: String) {
-        repository.decrementPriority(wordId)
+        repository.decrementPriority(wordId, groupId)
     }
 
     fun onWrongAnswer(wordId: String) {
-        repository.incrementPriority(wordId)
+        repository.incrementPriority(wordId, groupId)
     }
 }

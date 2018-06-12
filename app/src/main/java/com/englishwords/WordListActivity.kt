@@ -25,11 +25,9 @@ class WordListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_word_list)
-
-        teacherSystem = TeacherSystem(WordRepositoryImpl(applicationContext))
+        setUpTeacherSystem()
 
         val adapter = WordsStackAdapter(this, R.layout.stack_item, teacherSystem.getSortedWords().toMutableList())
-
         swipe_card_view.adapter = adapter
 
         swipe_card_view.setFlingListener(object : SwipeFlingAdapterView.onFlingListener {
@@ -60,9 +58,15 @@ class WordListActivity : AppCompatActivity() {
         })
 
         swipe_card_view.setOnItemClickListener { i, any ->
-            Toast.makeText(this@WordListActivity, "priority: ${(any as Word).priority}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@WordListActivity, "priority: ${(any as Word).priority}", Toast.LENGTH_SHORT).show()
             adapter.notifyDataSetChanged()
         }
+    }
+
+    private fun setUpTeacherSystem() {
+        // Get group id from intent and init teacher system
+        val groupId = intent.getStringExtra(getString(R.string.EXTRA_GROUP_ID)).toString()
+        teacherSystem = TeacherSystem(WordRepositoryImpl(applicationContext), groupId)
     }
 
     inner class WordsStackAdapter(context: Context?, val resource: Int, var objects: MutableList<Word>) :
