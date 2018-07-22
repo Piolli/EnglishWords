@@ -17,7 +17,7 @@ class EnglishWordsApplication : Application() {
                 .build()
         Realm.setDefaultConfiguration(realmConf)
 
-        exampleData()
+//        exampleData()
     }
 
     private fun exampleData() {
@@ -54,7 +54,7 @@ class EnglishWordsApplication : Application() {
 
     val words =
     "reproduce - воспроизводить\n" +
-    "retrieval system - поисковая системапоисков\n" +
+    "retrieval system - поисковая системапоисков системапоисков системапоисков системапоисков\n" +
     "prior - предшествующий\n" +
     "except - кроме, за исключением\n" +
     "brief - краткий, короткий\n"

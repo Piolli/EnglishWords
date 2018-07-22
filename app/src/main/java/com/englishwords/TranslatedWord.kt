@@ -29,4 +29,8 @@ open class TranslatedWord(override var word: String = "",
         if(priority > 0)
             priority--
     }
+
+    fun toDefaultPriority() {
+        priority = 5
+    }
 }

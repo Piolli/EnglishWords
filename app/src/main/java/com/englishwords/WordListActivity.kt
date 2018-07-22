@@ -4,11 +4,11 @@ import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.AppCompatTextView
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import com.englishwords.utils.DialogFactory
 import com.lorentzos.flingswipe.SwipeFlingAdapterView
 import kotlinx.android.synthetic.main.activity_word_list.*
 import java.lang.ref.SoftReference
@@ -61,6 +61,32 @@ class WordListActivity : AppCompatActivity() {
             Toast.makeText(this@WordListActivity, "priority: ${(any as Word).priority}", Toast.LENGTH_SHORT).show()
             adapter.notifyDataSetChanged()
         }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.word_list_activity_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId) {
+            R.id.menu_word_group_change -> {
+                startActivityWithString(ChangeGroupActivity::class.java, getString(R.string.EXTRA_GROUP_ID), teacherSystem.groupId)
+            }
+            R.id.menu_word_group_priority_to_default -> {
+                teacherSystem.toDefaultWordsThisGroup()
+            }
+            R.id.menu_word_group_delete -> {
+                DialogFactory.dialog2(this, "Удалить группу слов?", "Да", "Отмена") {
+                    if(it == DialogFactory.ANSWER.POSITIVE) {
+                        teacherSystem.deleteThisGroup()
+                        finish()
+                    }
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setUpTeacherSystem() {

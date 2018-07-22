@@ -31,11 +31,23 @@ class TeacherSystem(private val repository: WordRepository, val groupId: String)
         return ArrayList(words)
     }
 
+    fun toDefaultWordsThisGroup() {
+        val groups = repository.getWordGroupsRealmResult()
+        //Find groups and each word to default
+        groups.find { it.id == groupId }
+                ?.words
+                ?.forEach { it.toDefaultPriority() }
+    }
+
     fun onRightAnswer(wordId: String) {
         repository.decrementPriority(wordId, groupId)
     }
 
     fun onWrongAnswer(wordId: String) {
         repository.incrementPriority(wordId, groupId)
+    }
+
+    fun deleteThisGroup() {
+        repository.removeWordGroup(groupId)
     }
 }
