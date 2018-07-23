@@ -1,6 +1,7 @@
 package com.englishwords
 
-import io.realm.RealmList
+import com.englishwords.data.TranslatedWord
+import com.englishwords.data.WordGroup
 import io.realm.RealmResults
 import java.util.ArrayList
 
@@ -14,7 +15,7 @@ interface WordRepository {
     fun getWordGroups(): ArrayList<WordGroup>
 
     /**
-     * Get realm list for group adapter
+     * Get realm list for group wordGroupListAdapter
      */
     fun getWordGroupsRealmResult(): RealmResults<WordGroup>
 

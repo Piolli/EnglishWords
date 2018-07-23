@@ -1,5 +1,7 @@
 package com.englishwords
 
+import com.englishwords.data.TranslatedWord
+
 object WordParseUtils {
 
     fun parseFromString(words: String, delimeterBetweenStrings: String = "\n", delimeterBetweenWords: String = " - "): Array<TranslatedWord> {

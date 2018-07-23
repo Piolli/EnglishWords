@@ -1,27 +1,54 @@
-package com.englishwords
+package com.englishwords.data.source.local
 
-import android.content.Context
 import com.englishwords.data.TranslatedWord
 import com.englishwords.data.WordGroup
+import com.englishwords.data.source.WordGroupDataSource
 import io.realm.Realm
-import io.realm.RealmResults
-import java.util.*
 
-class WordRepositoryImpl(context: Context) : WordRepository {
-
-    override fun getWordGroups(): ArrayList<WordGroup> {
+object WordGroupLocalDataSource : WordGroupDataSource {
+    override fun getWordGroupsList(callback: WordGroupDataSource.LoadWordGroupsCallback) {
         val realm = Realm.getDefaultInstance()
         val results = realm.where(WordGroup::class.java).findAll()
-        val array = arrayListOf<WordGroup>()
-        results.forEach {
-            array.add(it)
+        if(results.isNotEmpty()) {
+            val array = arrayListOf<WordGroup>()
+            results.forEach {
+                array.add(it)
+            }
+            callback.onWordGroupsLoaded(array)
         }
-        return array
+        else {
+            callback.onDataNotAvailable()
+        }
     }
 
-    override fun getWordGroupsRealmResult(): RealmResults<WordGroup> {
+    override fun getWordGroup(groupId: String, callback: WordGroupDataSource.GetWordGroupCallback) {
         val realm = Realm.getDefaultInstance()
-        return realm.where(WordGroup::class.java).findAll()
+        val results = realm.where(WordGroup::class.java).findAll()
+        if(results.isNotEmpty()) {
+            val wordGroup = results.find { it.id == groupId }
+            if(wordGroup != null) {
+                callback.onWordGroupLoaded(wordGroup)
+            }
+            else {
+                callback.onDataNotAvailable()
+            }
+        }
+        else {
+            callback.onDataNotAvailable()
+        }
+    }
+
+    override fun changeToDefaultPriorityWordsInGroup(groupId: String) {
+        val realm = Realm.getDefaultInstance()
+        val groups = realm.where(WordGroup::class.java).findAll()
+        if(groups.isNotEmpty()) {
+            groups.find { it.id == groupId }
+                    ?.words
+                    ?.forEach { it.toDefaultPriority() }
+        }
+        else {
+
+        }
     }
 
     override fun saveWordToGroup(word: TranslatedWord, groupId: String) {
@@ -33,7 +60,7 @@ class WordRepositoryImpl(context: Context) : WordRepository {
         }
     }
 
-    override fun incrementPriority(wordId: String, groupId: String) {
+    override fun incrementWordPriorityInGroup(wordId: String, groupId: String) {
         Realm.getDefaultInstance().use {
             it.executeTransaction {
                 val group = it.where(WordGroup::class.java).equalTo("id", groupId).findFirst()
@@ -43,7 +70,7 @@ class WordRepositoryImpl(context: Context) : WordRepository {
         }
     }
 
-    override fun decrementPriority(wordId: String, groupId: String) {
+    override fun decrementWordPriorityInGroup(wordId: String, groupId: String) {
         Realm.getDefaultInstance().use {
             it.executeTransaction {
                 val group = it.where(WordGroup::class.java).equalTo("id", groupId).findFirst()
@@ -53,7 +80,7 @@ class WordRepositoryImpl(context: Context) : WordRepository {
         }
     }
 
-    override fun removeWord(wordId: String, groupId: String) {
+    override fun removeWordFromGroup(wordId: String, groupId: String) {
         Realm.getDefaultInstance().use {
             it.executeTransaction {
                 val group = it.where(WordGroup::class.java).equalTo("id", groupId).findFirst()
@@ -71,4 +98,5 @@ class WordRepositoryImpl(context: Context) : WordRepository {
             }
         }
     }
+
 }

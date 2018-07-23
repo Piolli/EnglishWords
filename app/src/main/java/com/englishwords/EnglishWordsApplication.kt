@@ -1,10 +1,11 @@
 package com.englishwords
 
 import android.app.Application
+import com.englishwords.data.TranslatedWord
+import com.englishwords.data.WordGroup
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmList
-import java.util.*
 
 class EnglishWordsApplication : Application() {
 

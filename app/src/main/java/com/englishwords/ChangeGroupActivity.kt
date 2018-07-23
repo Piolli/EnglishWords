@@ -7,13 +7,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.daimajia.swipe.SwipeLayout
-import com.daimajia.swipe.adapters.RecyclerSwipeAdapter
-import com.englishwords.utils.DialogFactory
+import com.englishwords.data.TranslatedWord
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 import kotlinx.android.synthetic.main.activity_change_group.*
-import kotlinx.android.synthetic.main.change_group_item.view.*
-import kotlinx.android.synthetic.main.change_group_swipe_menu.view.*
+import kotlinx.android.synthetic.main.change_word_item.view.*
+import kotlinx.android.synthetic.main.change_word_item_swipe.view.*
 
 class ChangeGroupActivity : AppCompatActivity(), WordListAdapterCallbacks {
     lateinit var repositoryImpl: WordRepositoryImpl
@@ -46,7 +45,7 @@ class ChangeGroupActivity : AppCompatActivity(), WordListAdapterCallbacks {
         : RealmRecyclerViewAdapter<TranslatedWord, WordListAdapter.TranslatedWordViewHolder>(data, autoUpdate, updateOnModification) {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TranslatedWordViewHolder {
-            val view = layoutInflater.inflate(R.layout.change_group_swipe_menu, parent, false)
+            val view = layoutInflater.inflate(R.layout.change_word_item_swipe, parent, false)
             view.swipe_layout.showMode = SwipeLayout.ShowMode.LayDown
             view.swipe_layout.addDrag(SwipeLayout.DragEdge.Left, view.bottom_wrapper)
 
